@@ -1,0 +1,50 @@
+Analyze this commit to suggest mutation testing targets.
+
+Commit Message:
+{{commit_message}}
+
+Files Changed:
+{{files_changed}}
+
+Stats:
+{{stats}}
+
+Diff:
+{{diff}}
+
+Focus on:
+- Conditional logic and branching
+- Boolean operators and logical expressions
+- Error handling and exception paths
+- Boundary conditions and edge cases
+- State changes and side effects
+- Complex algorithms or business logic
+- Mathematical operations and comparisons
+
+Return:
+
+1. Mutation Testing Targets:
+- Identify specific lines of code that should be targeted for mutation testing
+- List mutation operators to apply (e.g., changing true to false, > to >=, + to -)
+- Prioritize targets based on code complexity and criticality
+
+2. Specific Mutations Suggested:
+For each target:
+- File path and line number
+- Original code snippet
+- Suggested mutation (e.g., replace && with ||, change return true to return false)
+- Expected behavior change if mutation survives
+
+3. High-Priority Areas:
+- Critical business logic
+- Security-related code
+- Error handling paths
+- Complex conditional logic
+- Mathematical calculations
+
+4. Implementation Guidance:
+- Recommended mutation testing tools for the language/framework
+- How to configure mutation testing for these specific targets
+- Exclusions (if any) for code that shouldn't be mutation tested
+
+Focus on mutations that would reveal meaningful defects if they survive testing.
