@@ -128,6 +128,12 @@ All commands support both long-form flags (e.g., `--summary`) and short aliases 
 - `-C` / `--conflict` - Merge conflict resolution
 - `-Z` / `--stash` - Stash explanation
 - `-x` / `--split` - Commit splitting
+- `-A` / `--performance` - Performance analysis
+- `-Q` / `--database` - Database schema and query analysis
+- `-G` / `--docs` - Documentation analysis
+- `-Y` / `--api-docs` - API documentation generation
+- `-J` / `--coverage` - Test coverage analysis
+- `-K` / `--mutation` - Mutation testing targets
 
 ### Workflow Commands
 - `-k` / `--commit` - Plan commits for changes
@@ -395,6 +401,42 @@ Propose splitting a commit into smaller commits.
 
 ```bash
 -x, --split
+```
+
+Analyze performance implications of changes.
+
+```bash
+-A, --performance
+```
+
+Focus on database schema changes and query optimizations.
+
+```bash
+-Q, --database
+```
+
+Identify missing or outdated documentation.
+
+```bash
+-G, --docs
+```
+
+Generate API documentation updates from code changes.
+
+```bash
+-Y, --api-docs
+```
+
+Analyze test coverage implications of changes.
+
+```bash
+-J, --coverage
+```
+
+Suggest mutation testing targets based on changed code.
+
+```bash
+-K, --mutation
 ```
 
 Propose commits for current working tree changes.
@@ -672,6 +714,24 @@ gitxplain -e status
 
 # Review with cost tracking
 gitxplain HEAD~1 -r -o
+
+# Performance analysis of recent changes
+gitxplain HEAD~1 -A
+
+# Database schema change review
+gitxplain HEAD -Q
+
+# Check documentation coverage
+gitxplain HEAD -G
+
+# Generate API docs for new endpoints
+gitxplain HEAD -Y -M
+
+# Analyze test coverage impact
+gitxplain HEAD~1 -J
+
+# Suggest mutation testing targets
+gitxplain HEAD -K
 ```
 
 ## Output Modes
@@ -693,6 +753,12 @@ gitxplain HEAD~1 -r -o
 - `-Z, --stash [ref]`: explain what is stored in a stash entry, defaulting to `stash@{0}`
 - `-D, --diff <file>`: focus commit or range analysis on a single file
 - `-x, --split`: propose how to split a commit into multiple atomic commits
+- `-A, --performance`: analyze performance implications of changes (database queries, algorithmic complexity, memory usage)
+- `-Q, --database`: focus on database schema changes, migrations, and query optimizations
+- `-G, --docs`: identify missing or outdated documentation based on code changes
+- `-Y, --api-docs`: generate API documentation updates from code changes
+- `-J, --coverage`: analyze test coverage implications of changes
+- `-K, --mutation`: suggest mutation testing targets based on changed code
 - `-I, --interactive`: review or edit a split plan before executing it
 - `-o, --cost`: show cumulative token usage and estimated cost totals
 - `-g, --merge`: preview or execute a merge into the `release` branch based on detected version bumps
