@@ -5,7 +5,6 @@
   "type": "module",
   "bin": {
     "gitxplain": "cli/index.js",
-    "gitxplore": "cli/index.js",
     "gx": "cli/index.js"
   },
   "scripts": {

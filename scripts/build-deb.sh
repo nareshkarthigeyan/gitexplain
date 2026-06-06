@@ -36,7 +36,7 @@ find "${PACKAGE_ROOT}" -type d -exec chmod 755 {} +
 find "${PACKAGE_ROOT}" -type f -exec chmod 644 {} +
 chmod 755 "${INSTALL_ROOT}/cli/index.js"
 ln -s "../lib/${PACKAGE_NAME}/cli/index.js" "${PACKAGE_ROOT}/usr/bin/gitxplain"
-ln -s "../lib/${PACKAGE_NAME}/cli/index.js" "${PACKAGE_ROOT}/usr/bin/gitxplore"
+ln -s "../lib/${PACKAGE_NAME}/cli/index.js" "${PACKAGE_ROOT}/usr/bin/gx"
 
 cat > "${CONTROL_DIR}/control" <<EOF
 Package: ${PACKAGE_NAME}

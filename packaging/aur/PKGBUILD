@@ -18,5 +18,5 @@ package() {
 
   install -d "${pkgdir}/usr/bin"
   ln -sf "/usr/lib/${pkgname}/cli/index.js" "${pkgdir}/usr/bin/gitxplain"
-  ln -sf "/usr/lib/${pkgname}/cli/index.js" "${pkgdir}/usr/bin/gitxplore"
+  ln -sf "/usr/lib/${pkgname}/cli/index.js" "${pkgdir}/usr/bin/gx"
 }

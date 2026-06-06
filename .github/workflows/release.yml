@@ -111,7 +111,7 @@ jobs:
             def install
               libexec.install Dir["package/*"]
               bin.install_symlink libexec/"cli/index.js" => "gitxplain"
-              bin.install_symlink libexec/"cli/index.js" => "gitxplore"
+              bin.install_symlink libexec/"cli/index.js" => "gx"
             end
 
             test do
