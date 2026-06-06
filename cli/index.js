@@ -103,6 +103,103 @@ const MODE_FLAGS = new Map([
   ["--pipeline", "pipeline"]
 ]);
 
+// Short aliases for quick command usage
+const SHORT_ALIASES = new Map([
+  // Analysis modes
+  ["-s", "--summary"],
+  ["--sum", "--summary"],
+  ["-i", "--issues"],
+  ["--iss", "--issues"],
+  ["-f", "--fix"],
+  ["-m", "--impact"],
+  ["--imp", "--impact"],
+  ["-F", "--full"],
+  ["-l", "--lines"],
+  ["--lin", "--lines"],
+  ["-r", "--review"],
+  ["--rev", "--review"],
+  ["-S", "--security"],
+  ["--sec", "--security"],
+  ["-R", "--refactor"],
+  ["--ref", "--refactor"],
+  ["-t", "--test-suggest"],
+  ["--test", "--test-suggest"],
+  ["-p", "--pr-description"],
+  ["--pr", "--pr-description"],
+  ["-c", "--changelog"],
+  ["--ch", "--changelog"],
+  ["-b", "--blame"],
+  ["--bla", "--blame"],
+  ["-C", "--conflict"],
+  ["--con", "--conflict"],
+  ["-Z", "--stash"],
+  ["--sta", "--stash"],
+  ["-x", "--split"],
+  ["--spl", "--split"],
+  // Workflow
+  ["-k", "--commit"],
+  ["--com", "--commit"],
+  ["-g", "--merge"],
+  ["--mrg", "--merge"],
+  ["-T", "--tag"],
+  ["-e", "--release"],
+  ["--rel", "--release"],
+  ["-E", "--execute"],
+  ["--exe", "--execute"],
+  ["-d", "--dry-run"],
+  ["--dry", "--dry-run"],
+  ["-I", "--interactive"],
+  ["--int", "--interactive"],
+  // Output
+  ["-j", "--json"],
+  ["-M", "--markdown"],
+  ["--md", "--markdown"],
+  ["-H", "--html"],
+  ["-q", "--quiet"],
+  ["-v", "--verbose"],
+  ["--verb", "--verbose"],
+  ["-y", "--clipboard"],
+  ["--clip", "--clipboard"],
+  ["-z", "--stream"],
+  ["--str", "--stream"],
+  ["-n", "--no-cache"],
+  ["--noc", "--no-cache"],
+  ["-o", "--cost"],
+  // Comparison & repo
+  ["-D", "--diff"],
+  ["--dif", "--diff"],
+  ["-B", "--branch"],
+  ["--br", "--branch"],
+  ["-P", "--pr"],
+  ["-L", "--log"],
+  ["-u", "--status"],
+  ["--stat", "--status"],
+  ["-V", "--pipeline"],
+  ["--pipe", "--pipeline"],
+  // Provider
+  ["-w", "--provider"],
+  ["--prov", "--provider"],
+  ["-O", "--model"],
+  ["--mod", "--model"],
+  // Other
+  ["-X", "--max-diff-lines"],
+  ["--max", "--max-diff-lines"]
+]);
+
+// Function to expand short aliases to their long equivalents
+function expandAliases(args) {
+  return args.map((arg) => {
+    // Handle both standalone flags and flags with values (e.g., -b file.js or --blame=file.js)
+    if (arg.includes("=")) {
+      const [flag, ...valueParts] = arg.split("=");
+      const value = valueParts.join("=");
+      const expanded = SHORT_ALIASES.get(flag) || flag;
+      return `${expanded}=${value}`;
+    }
+    return SHORT_ALIASES.get(arg) || arg;
+  });
+}
+
 const FORMAT_FLAGS = new Map([
   ["--json", "json"],
   ["--markdown", "markdown"],
@@ -174,37 +271,37 @@ Usage:
   gitxplain --pipeline
 
 Analysis:
-  --summary       Generate a one-line summary of a change
-  --issues        Focus on the issue or failure being addressed
-  --fix           Explain the fix in simple terms
-  --impact        Explain behavior changes before vs after
-  --full          Generate a full structured analysis
-  --lines         Walk through the changed code file by file
-  --review        Generate review findings, risks, and suggestions
-  --security      Focus on security-relevant changes and concerns
-  --refactor      Suggest refactoring opportunities in the change
-  --test-suggest  Suggest tests to add or update for the change
-  --pr-description Generate a ready-to-paste PR description
-  --changelog     Generate changelog-style release notes
-  --blame <file>  Analyze ownership and history for one file with git blame
-  --conflict      Suggest resolutions for unresolved merge conflicts in the working tree
-  --stash [ref]   Explain a stash entry, defaulting to stash@{0}
-  --split         Propose splitting a commit into smaller atomic commits
-  --cost          Show cumulative token usage and estimated cost totals
-  --commit        Propose commits for current uncommitted changes
-  --execute       Execute a proposed split or commit plan
-  --dry-run       Preview the plan without executing it
-  --interactive   Review or edit a split plan before execution
+  -s, --summary       Generate a one-line summary of a change
+  -i, --issues        Focus on the issue or failure being addressed
+  -f, --fix           Explain the fix in simple terms
+  -m, --impact        Explain behavior changes before vs after
+  -F, --full          Generate a full structured analysis
+  -l, --lines         Walk through the changed code file by file
+  -r, --review        Generate review findings, risks, and suggestions
+  -S, --security      Focus on security-relevant changes and concerns
+  -R, --refactor      Suggest refactoring opportunities in the change
+  -t, --test-suggest  Suggest tests to add or update for the change
+  -p, --pr-description Generate a ready-to-paste PR description
+  -c, --changelog     Generate changelog-style release notes
+  -b, --blame <file>  Analyze ownership and history for one file with git blame
+  -C, --conflict      Suggest resolutions for unresolved merge conflicts in the working tree
+  -Z, --stash [ref]   Explain a stash entry, defaulting to stash@{0}
+  -x, --split         Propose splitting a commit into smaller atomic commits
+  -o, --cost          Show cumulative token usage and estimated cost totals
+  -k, --commit        Propose commits for current uncommitted changes
+  -E, --execute       Execute a proposed split or commit plan
+  -d, --dry-run       Preview the plan without executing it
+  -I, --interactive   Review or edit a split plan before execution
 
 Release:
-  --release [status]  Show release branch health and next recommended action
-  --merge         Preview or apply a merge into the release branch
-  --tag           Preview or create release tags from version bumps
+  -e, --release [status]  Show release branch health and next recommended action
+  -g, --merge         Preview or apply a merge into the release branch
+  -T, --tag           Preview or create release tags from version bumps
 
 Repo:
-  --log           Print Git log entries for the current repository
-  --status        Print Git working tree status for the current repository
-  --pipeline      Detect the current repository stack and create GitHub/GitLab/CircleCI/Bitbucket CI files
+  -L, --log           Print Git log entries for the current repository
+  -u, --status        Print Git working tree status for the current repository
+  -V, --pipeline      Detect the current repository stack and create GitHub/GitLab/CircleCI/Bitbucket CI files
 
 Quick Actions:
   config          Persist provider, model, and API key settings
@@ -221,22 +318,22 @@ Quick Actions:
   git             Pass through to native git commands
 
 Output:
-  --provider <name>
-  --model <name>
-  --json
-  --markdown
-  --html
-  --quiet
-  --verbose
-  --clipboard
-  --stream
-  --no-cache
-  --diff <file>
-  --max-diff-lines <n>
+  -w, --provider <name>
+  -O, --model <name>
+  -j, --json
+  -M, --markdown
+  -H, --html
+  -q, --quiet
+  -v, --verbose
+  -y, --clipboard
+  -z, --stream
+  -n, --no-cache
+  -D, --diff <file>
+  -X, --max-diff-lines <n>
 
 Comparison:
-  --branch [base-ref]   Analyze the current branch against a base branch
-  --pr [base-ref]       Alias for --branch, useful for PR-style comparisons
+  -B, --branch [base-ref]   Analyze the current branch against a base branch
+  -P, --pr [base-ref]       Alias for --branch, useful for PR-style comparisons
 
 Config:
   Project config: .gitxplainrc or .gitxplainrc.json
@@ -418,11 +515,12 @@ function isDirectNativeGitSubcommand(subcommand, knownGitSubcommands) {
 }
 
 export function parseArgs(argv, options = {}) {
-  const args = argv.slice(2);
+  const args = expandAliases(argv.slice(2));
   const subcommand = args[0];
   const knownGitSubcommands = options.gitSubcommands ?? listGitSubcommands();
   const flags = new Set(args.filter((arg) => arg.startsWith("--")));
-  const valueFlags = new Set(["--provider", "--model", "--max-diff-lines", "--branch", "--pr", "--blame", "--stash", "--diff"]);
+  const valueFlags = new Set(["--provider", "--model", "--max-diff-lines", "--branch", "--pr", "--blame", "--stash", "--diff",
+    "-w", "--prov", "-O", "--mod", "-X", "--max", "-B", "--br", "-P", "-b", "--bla", "-Z", "--sta", "-D", "--dif"]);
   const positional = [];
 
   for (let index = 0; index < args.length; index += 1) {
