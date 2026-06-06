@@ -1,6 +1,6 @@
 {
   "name": "gitxplain",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "AI-powered Git commit explainer CLI",
   "type": "module",
   "bin": {
@@ -19,6 +19,5 @@
     "developer-tools"
   ],
   "license": "MIT",
-  "dependencies": {
-  }
+  "dependencies": {}
 }
