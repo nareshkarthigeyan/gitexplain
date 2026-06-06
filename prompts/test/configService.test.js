@@ -9,7 +9,7 @@ import {
   getUserConfigPath,
   loadUserConfig,
   updateUserConfig
-} from "../cli/services/configService.js";
+} from "../../cli/services/configService.js";
 
 test("getProviderApiKeyField maps supported providers", () => {
   assert.equal(getProviderApiKeyField("openai"), "OPENAI_API_KEY");

@@ -20,7 +20,7 @@ import {
   selectReleaseTags,
   selectReleaseTagsFromReleaseCommits,
   selectReleaseWindows
-} from "../cli/services/mergeService.js";
+} from "../../cli/services/mergeService.js";
 
 test("detectVersionChanges finds semver bumps in diff lines", () => {
   const change = detectVersionChanges(`

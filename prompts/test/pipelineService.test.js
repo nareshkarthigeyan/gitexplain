@@ -13,7 +13,7 @@ import {
   inspectRepositoryForPipeline,
   resolvePipelineSelection,
   writePipelineFiles
-} from "../cli/services/pipelineService.js";
+} from "../../cli/services/pipelineService.js";
 
 function createTempRepo() {
   return mkdtempSync(path.join(os.tmpdir(), "gitxplain-pipeline-"));

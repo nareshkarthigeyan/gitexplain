@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildPrompt } from "../cli/services/promptService.js";
+import { buildPrompt } from "../../cli/services/promptService.js";
 
 const commitData = {
   analysisType: "commit",

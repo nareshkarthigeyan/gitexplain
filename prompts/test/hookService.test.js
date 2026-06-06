@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { installHook } from "../cli/services/hookService.js";
+import { installHook } from "../../cli/services/hookService.js";
 
 function createRepoDir() {
   const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "gitxplain-hook-"));

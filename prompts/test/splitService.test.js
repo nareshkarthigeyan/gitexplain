@@ -10,7 +10,7 @@ import {
   parseSplitPlan,
   reconcileSplitPlan,
   validateSplitExecutionTarget
-} from "../cli/services/splitService.js";
+} from "../../cli/services/splitService.js";
 
 function run(commandArgs, cwd) {
   return execFileSync("git", commandArgs, {

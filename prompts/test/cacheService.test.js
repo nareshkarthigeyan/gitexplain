@@ -10,7 +10,7 @@ import {
   getCacheStats,
   readCache,
   writeCache
-} from "../cli/services/cacheService.js";
+} from "../../cli/services/cacheService.js";
 
 test("writeCache and readCache round-trip values", () => {
   const tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "gitxplain-cache-home-"));

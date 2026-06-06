@@ -11,7 +11,7 @@ import {
   getUsageStats,
   normalizeUsageMetrics,
   resolvePricing
-} from "../cli/services/usageService.js";
+} from "../../cli/services/usageService.js";
 
 test("normalizeUsageMetrics handles OpenAI and Gemini style usage payloads", () => {
   assert.deepEqual(

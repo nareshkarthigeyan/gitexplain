@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main, parseArgs } from "../cli/index.js";
+import { main, parseArgs } from "../../cli/index.js";
 
 test("parseArgs handles commit mode and provider overrides", () => {
   const parsed = parseArgs([

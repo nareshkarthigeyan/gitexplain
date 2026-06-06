@@ -16,7 +16,7 @@ import {
   getRepositoryStatus,
   resolveStashRef,
   resolveTreeSha
-} from "../cli/services/gitService.js";
+} from "../../cli/services/gitService.js";
 
 test("fetchCommitData reads a single commit", () => {
   const responses = new Map([

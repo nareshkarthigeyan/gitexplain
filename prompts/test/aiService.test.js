@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getProviderConfig } from "../cli/services/aiService.js";
+import { getProviderConfig } from "../../cli/services/aiService.js";
 
 test("getProviderConfig supports anthropic", () => {
   const originalApiKey = process.env.ANTHROPIC_API_KEY;

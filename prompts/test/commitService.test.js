@@ -9,7 +9,7 @@ import {
   formatCommitPlan,
   parseCommitPlan,
   reconcileCommitPlan
-} from "../cli/services/commitService.js";
+} from "../../cli/services/commitService.js";
 
 function run(commandArgs, cwd) {
   return execFileSync("git", commandArgs, {

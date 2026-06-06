@@ -4,7 +4,7 @@ import {
   formatJsonOutput,
   formatMarkdownOutput,
   formatOutput
-} from "../cli/services/outputFormatter.js";
+} from "../../cli/services/outputFormatter.js";
 
 function stripAnsi(text) {
   return text.replace(/\u001b\[[0-9;]*m/g, "");
