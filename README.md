@@ -107,6 +107,59 @@ You can start from:
 cp .env.example .env
 ```
 
+## Quick Command Reference
+
+All commands support both long-form flags (e.g., `--summary`) and short aliases (e.g., `-s`) for faster typing. Here are the most commonly used short aliases:
+
+### Analysis Modes
+- `-s` / `--summary` - One-line summary
+- `-F` / `--full` - Full structured analysis  
+- `-r` / `--review` - Code review findings
+- `-S` / `--security` - Security analysis
+- `-l` / `--lines` - Line-by-line walkthrough
+- `-R` / `--refactor` - Refactoring suggestions
+- `-t` / `--test-suggest` - Test suggestions
+- `-p` / `--pr-description` - PR description
+- `-c` / `--changelog` - Changelog notes
+- `-i` / `--issues` - Issue-focused analysis
+- `-f` / `--fix` - Simple explanation
+- `-m` / `--impact` - Before/after impact
+- `-b` / `--blame` - File ownership analysis
+- `-C` / `--conflict` - Merge conflict resolution
+- `-Z` / `--stash` - Stash explanation
+- `-x` / `--split` - Commit splitting
+
+### Workflow Commands
+- `-k` / `--commit` - Plan commits for changes
+- `-g` / `--merge` - Release merge
+- `-T` / `--tag` - Release tagging
+- `-e` / `--release` - Release status
+- `-E` / `--execute` - Execute plan
+- `-d` / `--dry-run` - Preview without executing
+- `-I` / `--interactive` - Interactive review
+
+### Output Options
+- `-j` / `--json` - JSON output
+- `-M` / `--markdown` - Markdown output
+- `-H` / `--html` - HTML output
+- `-q` / `--quiet` - Quiet mode
+- `-v` / `--verbose` - Verbose mode
+- `-y` / `--clipboard` - Copy to clipboard
+- `-z` / `--stream` - Stream output
+- `-n` / `--no-cache` - Bypass cache
+- `-o` / `--cost` - Show cost
+
+### Repository & Comparison
+- `-L` / `--log` - Repository log
+- `-u` / `--status` - Repository status
+- `-V` / `--pipeline` - CI/CD pipeline generation
+- `-B` / `--branch` - Branch comparison
+- `-P` / `--pr` - PR-style comparison
+- `-D` / `--diff` - File-specific diff
+- `-w` / `--provider` - AI provider
+- `-O` / `--model` - AI model
+- `-X` / `--max-diff-lines` - Diff line limit
+
 ## Usage
 
 Show the built-in command reference.
@@ -245,121 +298,127 @@ Analysis:
 Generate a one-line summary.
 
 ```bash
---summary
+-s, --summary
 ```
 
 Focus on the issue being fixed.
 
 ```bash
---issues
+-i, --issues
 ```
 
 Explain the fix in simple terms.
 
 ```bash
---fix
+-f, --fix
 ```
 
 Explain behavior changes before vs after.
 
 ```bash
---impact
+-m, --impact
 ```
 
 Generate the full structured analysis.
 
 ```bash
---full
+-F, --full
 ```
 
 Walk through the changed code file by file.
 
 ```bash
---lines
+-l, --lines
 ```
 
 Generate review findings and risks.
 
 ```bash
---review
+-r, --review
 ```
 
 Focus on security-relevant changes.
 
 ```bash
---security
+-S, --security
 ```
 
 Suggest refactoring follow-ups.
 
 ```bash
---refactor
+-R, --refactor
 ```
 
 Suggest tests to add or update.
 
 ```bash
---test-suggest
+-t, --test-suggest
 ```
 
 Generate a PR description.
 
 ```bash
---pr-description
+-p, --pr-description
 ```
 
 Generate changelog-style notes.
 
 ```bash
---changelog
+-c, --changelog
 ```
 
 Analyze file ownership with git blame.
 
 ```bash
---blame <file>
+-b, --blame <file>
 ```
 
 Suggest resolutions for unresolved merge conflicts.
 
 ```bash
---conflict
+-C, --conflict
+```
+
+Explain a stash entry.
+
+```bash
+-Z, --stash [ref]
 ```
 
 Focus analysis on one changed file.
 
 ```bash
---diff <file>
+-D, --diff <file>
 ```
 
 Propose splitting a commit into smaller commits.
 
 ```bash
---split
+-x, --split
 ```
 
 Propose commits for current working tree changes.
 
 ```bash
---commit
+-k, --commit
 ```
 
 Apply a split, commit, merge, or tag plan.
 
 ```bash
---execute
+-E, --execute
 ```
 
 Preview a plan without applying it.
 
 ```bash
---dry-run
+-d, --dry-run
 ```
 
 Review or edit a split plan before execution.
 
 ```bash
---interactive
+-I, --interactive
 ```
 
 Release:
@@ -367,19 +426,19 @@ Release:
 Show release status details.
 
 ```bash
---release [status]
+-e, --release [status]
 ```
 
 Preview or apply a merge into the release branch.
 
 ```bash
---merge
+-g, --merge
 ```
 
 Preview or create release tags from version bumps.
 
 ```bash
---tag
+-T, --tag
 ```
 
 Repo:
@@ -387,19 +446,19 @@ Repo:
 Print the current repository log.
 
 ```bash
---log
+-L, --log
 ```
 
 Print the current working tree status.
 
 ```bash
---status
+-u, --status
 ```
 
 Inspect the repo and create CI/CD workflow files.
 
 ```bash
---pipeline
+-V, --pipeline
 ```
 
 Quick Actions:
@@ -475,73 +534,73 @@ Output:
 Override the configured provider for one command.
 
 ```bash
---provider <name>
+-w, --provider <name>
 ```
 
 Override the configured model for one command.
 
 ```bash
---model <name>
+-O, --model <name>
 ```
 
 Return JSON output.
 
 ```bash
---json
+-j, --json
 ```
 
 Return Markdown output.
 
 ```bash
---markdown
+-M, --markdown
 ```
 
 Return HTML output.
 
 ```bash
---html
+-H, --html
 ```
 
 Reduce extra console output.
 
 ```bash
---quiet
+-q, --quiet
 ```
 
 Show extra response metadata.
 
 ```bash
---verbose
+-v, --verbose
 ```
 
 Copy the final output to the clipboard.
 
 ```bash
---clipboard
+-y, --clipboard
 ```
 
 Stream model output as it arrives.
 
 ```bash
---stream
+-z, --stream
 ```
 
 Bypass cached responses for one command.
 
 ```bash
---no-cache
+-n, --no-cache
 ```
 
 Show cumulative token usage and estimated cost totals.
 
 ```bash
---cost
+-o, --cost
 ```
 
 Limit diff size before sending it to the model.
 
 ```bash
---max-diff-lines <n>
+-X, --max-diff-lines <n>
 ```
 
 ## Running The CLI
@@ -582,39 +641,72 @@ If you do not want to link it globally, you can still run it locally:
 node ./cli/index.js HEAD~1 --full
 ```
 
+## Quick Examples with Short Aliases
+
+Using short aliases can significantly speed up your workflow:
+
+```bash
+# Quick summary of last commit
+gitxplain HEAD -s
+
+# Full analysis with JSON output
+gitxplain HEAD~1 -F -j
+
+# Security review of current branch vs main
+gitxplain -B main -S
+
+# Plan commits for current changes
+gitxplain -k
+
+# Show repository status
+gitxplain -u
+
+# Generate PR description for branch
+gitxplain -B main -p -M
+
+# Split last commit interactively
+gitxplain HEAD -x -I -E
+
+# Check release status
+gitxplain -e status
+
+# Review with cost tracking
+gitxplain HEAD~1 -r -o
+```
+
 ## Output Modes
 
-- `--summary`: one-sentence commit summary
-- `--issues`: bug or issue-oriented analysis
-- `--fix`: junior-friendly explanation of the fix
-- `--impact`: before-vs-after explanation focused on behavior changes
-- `--full`: full structured analysis
-- `--lines`: file-by-file, line-by-line walkthrough of the changed code
-- `--review`: code review findings with actionable suggestions
-- `--security`: security-focused analysis of the change
-- `--refactor`: suggest maintainability-focused refactors visible in the change
-- `--test-suggest`: suggest the most valuable tests to add or update
-- `--pr-description`: draft a ready-to-paste pull request description
-- `--changelog`: generate changelog-style release notes from the change set
-- `--blame <file>`: summarize ownership and change history for one file using `git blame`
-- `--conflict`: inspect unresolved merge conflicts and suggest likely resolutions
-- `--stash [ref]`: explain what is stored in a stash entry, defaulting to `stash@{0}`
-- `--diff <file>`: focus commit or range analysis on a single file
-- `--split`: propose how to split a commit into multiple atomic commits
-- `--interactive`: review or edit a split plan before executing it
-- `--cost`: show cumulative token usage and estimated cost totals
-- `--merge`: preview or execute a merge into the `release` branch based on detected version bumps
-- `--tag`: preview or create release tags from the same detected version windows
-- `--release [status]`: inspect release branch health, missing tags, source-vs-release drift, and the next recommended action
-- `--commit`: propose commits for current uncommitted changes
-- `--log`: print Git log entries for the current repository
-- `--status`: print Git working tree status for the current repository
-- `--pipeline`: inspect the current repository and generate GitHub Actions, GitLab CI, CircleCI, or Bitbucket Pipelines config
-- `--execute`: apply a proposed split by rewriting history
-- `--dry-run`: preview the split or commit plan without applying it
-- `--json`: return structured JSON instead of formatted text
-- `--markdown`: return Markdown output
-- `--html`: return HTML output
+- `-s, --summary`: one-sentence commit summary
+- `-i, --issues`: bug or issue-oriented analysis
+- `-f, --fix`: junior-friendly explanation of the fix
+- `-m, --impact`: before-vs-after explanation focused on behavior changes
+- `-F, --full`: full structured analysis
+- `-l, --lines`: file-by-file, line-by-line walkthrough of the changed code
+- `-r, --review`: code review findings with actionable suggestions
+- `-S, --security`: security-focused analysis of the change
+- `-R, --refactor`: suggest maintainability-focused refactors visible in the change
+- `-t, --test-suggest`: suggest the most valuable tests to add or update
+- `-p, --pr-description`: draft a ready-to-paste pull request description
+- `-c, --changelog`: generate changelog-style release notes from the change set
+- `-b, --blame <file>`: summarize ownership and change history for one file using `git blame`
+- `-C, --conflict`: inspect unresolved merge conflicts and suggest likely resolutions
+- `-Z, --stash [ref]`: explain what is stored in a stash entry, defaulting to `stash@{0}`
+- `-D, --diff <file>`: focus commit or range analysis on a single file
+- `-x, --split`: propose how to split a commit into multiple atomic commits
+- `-I, --interactive`: review or edit a split plan before executing it
+- `-o, --cost`: show cumulative token usage and estimated cost totals
+- `-g, --merge`: preview or execute a merge into the `release` branch based on detected version bumps
+- `-T, --tag`: preview or create release tags from the same detected version windows
+- `-e, --release [status]`: inspect release branch health, missing tags, source-vs-release drift, and the next recommended action
+- `-k, --commit`: propose commits for current uncommitted changes
+- `-L, --log`: print Git log entries for the current repository
+- `-u, --status`: print Git working tree status for the current repository
+- `-V, --pipeline`: inspect the current repository and generate GitHub Actions, GitLab CI, CircleCI, or Bitbucket Pipelines config
+- `-E, --execute`: apply a proposed split by rewriting history
+- `-d, --dry-run`: preview the split or commit plan without applying it
+- `-j, --json`: return structured JSON instead of formatted text
+- `-M, --markdown`: return Markdown output
+- `-H, --html`: return HTML output
 
 ## Repository Log
 
