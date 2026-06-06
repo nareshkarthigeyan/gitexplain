@@ -221,7 +221,7 @@ test("getRepositoryLog fetches full repository history by default", () => {
   const log = getRepositoryLog("/tmp", null, runner);
 
   assert.equal(log, "abc1234 2026-04-08 Guru Initial commit");
-  assert.deepEqual(calls, ["log --date=short --pretty=format:%h %ad %an %s"]);
+  assert.deepEqual(calls, ["log --reverse --date=short --pretty=format:%h %ad %an %s"]);
 });
 
 test("getRepositoryLog supports an explicit limit when requested", () => {
@@ -234,7 +234,7 @@ test("getRepositoryLog supports an explicit limit when requested", () => {
   const log = getRepositoryLog("/tmp", 20, runner);
 
   assert.equal(log, "abc1234 2026-04-08 Guru Initial commit");
-  assert.deepEqual(calls, ["log --max-count=20 --date=short --pretty=format:%h %ad %an %s"]);
+  assert.deepEqual(calls, ["log --reverse --max-count=20 --date=short --pretty=format:%h %ad %an %s"]);
 });
 
 test("getRepositoryStatus formats porcelain status output for humans", () => {

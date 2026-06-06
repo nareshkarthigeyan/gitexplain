@@ -331,10 +331,10 @@ export function gitAddAll(cwd) {
 }
 
 export function getRepositoryLog(cwd, limit = null, runner = runGitCommand) {
-  const args = ["log", "--date=short", "--pretty=format:%h %ad %an %s"];
+  const args = ["log", "--reverse", "--date=short", "--pretty=format:%h %ad %an %s"];
 
   if (limit != null) {
-    args.splice(1, 0, `--max-count=${limit}`);
+    args.splice(2, 0, `--max-count=${limit}`);
   }
 
   return runner(args, cwd);
