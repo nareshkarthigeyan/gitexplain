@@ -20,6 +20,5 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "gitxplain": "^0.2.3"
   }
 }
