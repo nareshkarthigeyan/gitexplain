@@ -1,0 +1,47 @@
+Analyze this commit from a performance perspective.
+
+Commit Message:
+{{commit_message}}
+
+Files Changed:
+{{files_changed}}
+
+Stats:
+{{stats}}
+
+Diff:
+{{diff}}
+
+Focus on:
+- Database query performance and optimization opportunities
+- Algorithmic complexity changes (O(n) vs O(n^2), etc.)
+- Memory usage patterns and potential leaks
+- Network call efficiency and batching opportunities
+- Caching strategy improvements
+- I/O operations and blocking behavior
+- Concurrency and parallelization opportunities
+- Resource utilization (CPU, memory, disk, network)
+
+Return:
+
+1. Performance Impact Assessment:
+- Overall performance impact (Positive / Negative / Neutral)
+- Estimated severity of performance changes
+
+2. Specific Performance Findings:
+- Database queries: identify N+1 queries, missing indexes, inefficient joins
+- Algorithmic complexity: highlight any O(n^2) or worse algorithms introduced
+- Memory usage: identify potential memory leaks or inefficient data structures
+- Network calls: identify excessive API calls or lack of batching
+- Caching: suggest where caching could be added or improved
+
+3. Optimization Recommendations:
+- Specific code changes to improve performance
+- Database indexing suggestions
+- Caching strategies
+- Architectural improvements if needed
+
+4. Performance Testing Suggestions:
+- What performance tests should be added or updated
+- Key metrics to monitor
+- Load testing scenarios to consider

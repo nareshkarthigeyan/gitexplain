@@ -100,7 +100,13 @@ const MODE_FLAGS = new Map([
   ["--release", "release"],
   ["--log", "log"],
   ["--status", "status"],
-  ["--pipeline", "pipeline"]
+  ["--pipeline", "pipeline"],
+  ["--performance", "performance"],
+  ["--database", "database"],
+  ["--docs", "docs"],
+  ["--api-docs", "api-docs"],
+  ["--coverage", "coverage"],
+  ["--mutation", "mutation"]
 ]);
 
 // Short aliases for quick command usage
@@ -136,6 +142,18 @@ const SHORT_ALIASES = new Map([
   ["--sta", "--stash"],
   ["-x", "--split"],
   ["--spl", "--split"],
+  // New Analysis Modes
+  ["-A", "--performance"],
+  ["--perf", "--performance"],
+  ["-Q", "--database"],
+  ["--db", "--database"],
+  ["-G", "--docs"],
+  ["-Y", "--api-docs"],
+  ["--api", "--api-docs"],
+  ["-J", "--coverage"],
+  ["--cov", "--coverage"],
+  ["-K", "--mutation"],
+  ["--mut", "--mutation"],
   // Workflow
   ["-k", "--commit"],
   ["--com", "--commit"],
@@ -222,7 +240,13 @@ const ANALYSIS_MODES = new Set([
   "blame",
   "conflict",
   "stash",
-  "split"
+  "split",
+  "performance",
+  "database",
+  "docs",
+  "api-docs",
+  "coverage",
+  "mutation"
 ]);
 
 const RESERVED_SUBCOMMANDS = new Set([
@@ -287,6 +311,12 @@ Analysis:
   -C, --conflict      Suggest resolutions for unresolved merge conflicts in the working tree
   -Z, --stash [ref]   Explain a stash entry, defaulting to stash@{0}
   -x, --split         Propose splitting a commit into smaller atomic commits
+  -A, --performance   Analyze performance implications of changes
+  -Q, --database      Focus on database schema changes and query optimizations
+  -G, --docs          Identify missing or outdated documentation
+  -Y, --api-docs      Generate API documentation updates from code changes
+  -J, --coverage      Analyze test coverage implications of changes
+  -K, --mutation      Suggest mutation testing targets based on changed code
   -o, --cost          Show cumulative token usage and estimated cost totals
   -k, --commit        Propose commits for current uncommitted changes
   -E, --execute       Execute a proposed split or commit plan
