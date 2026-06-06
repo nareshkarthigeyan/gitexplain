@@ -1,0 +1,52 @@
+Generate API documentation updates based on this commit.
+
+Commit Message:
+{{commit_message}}
+
+Files Changed:
+{{files_changed}}
+
+Stats:
+{{stats}}
+
+Diff:
+{{diff}}
+
+Focus on:
+- New API endpoints or routes
+- Modified API signatures or parameters
+- Changed response formats
+- New error codes or status changes
+- Authentication/authorization changes
+- Rate limiting or throttling changes
+- Deprecation notices
+
+Return:
+
+1. API Changes Summary:
+- List new endpoints with methods and paths
+- Modified endpoints with parameter changes
+- Changed response structures
+- New error responses
+
+2. Detailed API Documentation:
+For each new or modified API endpoint:
+- HTTP method and path
+- Request parameters (path, query, body) with types and constraints
+- Request body schema (if applicable)
+- Response format and status codes
+- Error responses and their meanings
+- Authentication requirements
+- Rate limits (if applicable)
+
+3. Breaking Changes:
+- List any breaking API changes
+- Migration path for existing clients
+- Deprecation timeline
+
+4. Example Usage:
+- Provide example requests for new endpoints
+- Show example responses
+- Include cURL or HTTP examples if helpful
+
+Format the output in Markdown suitable for inclusion in API documentation.
