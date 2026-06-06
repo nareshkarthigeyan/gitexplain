@@ -1,0 +1,47 @@
+Analyze this commit to identify documentation needs.
+
+Commit Message:
+{{commit_message}}
+
+Files Changed:
+{{files_changed}}
+
+Stats:
+{{stats}}
+
+Diff:
+{{diff}}
+
+Focus on:
+- New public APIs or functions that need documentation
+- Changes to existing APIs that require doc updates
+- Configuration changes that need to be documented
+- New features that need user-facing documentation
+- Breaking changes that require migration guides
+- Deprecated functionality that needs warning notes
+- Code complexity that needs explanatory comments
+
+Return:
+
+1. Missing Documentation:
+- List new functions, classes, or methods that lack documentation
+- Identify changed APIs that need updated docs
+- Configuration options that need documentation
+
+2. Outdated Documentation:
+- Existing docs that conflict with the code changes
+- README sections that need updating
+- API references that are now inaccurate
+
+3. Documentation Recommendations:
+- Specific doc strings or comments that should be added
+- README sections that need updates
+- User guide topics to add or modify
+- Migration guides or upgrade notes needed
+
+4. Priority Assessment:
+- High priority: breaking changes, new public APIs
+- Medium priority: configuration changes, behavior changes
+- Low priority: internal implementation details
+
+Provide file paths and specific line numbers where documentation should be added or updated.
