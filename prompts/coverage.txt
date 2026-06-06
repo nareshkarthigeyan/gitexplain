@@ -1,0 +1,46 @@
+Analyze this commit for test coverage implications.
+
+Commit Message:
+{{commit_message}}
+
+Files Changed:
+{{files_changed}}
+
+Stats:
+{{stats}}
+
+Diff:
+{{diff}}
+
+Focus on:
+- New functions or methods that need test coverage
+- Modified code paths that may need updated tests
+- Edge cases and error handling that should be tested
+- Integration points that need coverage
+- Removed code that may allow test cleanup
+- Complex logic that benefits from comprehensive testing
+
+Return:
+
+1. Coverage Gaps:
+- List new functions, classes, or methods lacking tests
+- Identify modified code paths without corresponding test updates
+- Error conditions not covered by existing tests
+
+2. Test Recommendations:
+- Specific test cases that should be added
+- Edge cases to test (boundary conditions, null/undefined, error cases)
+- Integration tests needed for new dependencies or API calls
+- Performance tests if relevant
+
+3. Test Updates Needed:
+- Existing tests that should be modified due to behavior changes
+- Test data that needs updating
+- Mock expectations that need adjustment
+
+4. Coverage Impact Assessment:
+- Estimated coverage percentage change
+- High-risk areas that prioritize test coverage
+- Critical paths that must be covered
+
+Provide specific file paths and function names where test coverage should be added.
