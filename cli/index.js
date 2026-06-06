@@ -157,51 +157,72 @@ const SHORT_ALIASES = new Map([
   // Workflow
   ["-k", "--commit"],
   ["--com", "--commit"],
+  ["--plan", "--commit"],
   ["-g", "--merge"],
   ["--mrg", "--merge"],
+  ["--mg", "--merge"],
   ["-T", "--tag"],
+  ["--tg", "--tag"],
   ["-e", "--release"],
   ["--rel", "--release"],
+  ["--rl", "--release"],
   ["-E", "--execute"],
   ["--exe", "--execute"],
+  ["--run", "--execute"],
   ["-d", "--dry-run"],
   ["--dry", "--dry-run"],
+  ["--prev", "--dry-run"],
   ["-I", "--interactive"],
   ["--int", "--interactive"],
+  ["--edit", "--interactive"],
   // Output
   ["-j", "--json"],
+  ["--json", "--json"],
   ["-M", "--markdown"],
   ["--md", "--markdown"],
   ["-H", "--html"],
   ["-q", "--quiet"],
+  ["--silent", "--quiet"],
   ["-v", "--verbose"],
   ["--verb", "--verbose"],
+  ["--vv", "--verbose"],
   ["-y", "--clipboard"],
   ["--clip", "--clipboard"],
+  ["--copy", "--clipboard"],
   ["-z", "--stream"],
   ["--str", "--stream"],
   ["-n", "--no-cache"],
   ["--noc", "--no-cache"],
+  ["--fresh", "--no-cache"],
   ["-o", "--cost"],
   // Comparison & repo
   ["-D", "--diff"],
   ["--dif", "--diff"],
   ["-B", "--branch"],
   ["--br", "--branch"],
+  ["--branch-named", "--branch"],
   ["-P", "--pr"],
+  ["--pull-request", "--pr"],
   ["-L", "--log"],
+  ["--log", "--log"],
+  ["--lg", "--log"],
   ["-u", "--status"],
   ["--stat", "--status"],
+  ["-st", "--status"],
   ["-V", "--pipeline"],
   ["--pipe", "--pipeline"],
+  ["--ci", "--pipeline"],
   // Provider
   ["-w", "--provider"],
   ["--prov", "--provider"],
+  ["-W", "--provider"],
   ["-O", "--model"],
   ["--mod", "--model"],
+  ["--mo", "--model"],
   // Other
   ["-X", "--max-diff-lines"],
-  ["--max", "--max-diff-lines"]
+  ["--max", "--max-diff-lines"],
+  ["--limit", "--max-diff-lines"]
 ]);
 
 // Function to expand short aliases to their long equivalents
@@ -271,6 +292,7 @@ function printHelp() {
 
 Usage:
   gitxplain --help
+  gx --help
   gitxplain --version
   gitxplain cache clear
   gitxplain cache stats
@@ -318,20 +340,20 @@ Analysis:
   -J, --coverage      Analyze test coverage implications of changes
   -K, --mutation      Suggest mutation testing targets based on changed code
   -o, --cost          Show cumulative token usage and estimated cost totals
-  -k, --commit        Propose commits for current uncommitted changes
-  -E, --execute       Execute a proposed split or commit plan
-  -d, --dry-run       Preview the plan without executing it
-  -I, --interactive   Review or edit a split plan before execution
+  -k, --commit        Propose commits for current uncommitted changes (also: --com, --plan)
+  -E, --execute       Execute a proposed split or commit plan (also: --exe, --run)
+  -d, --dry-run       Preview the plan without executing it (also: --dry, --prev)
+  -I, --interactive   Review or edit a split plan before execution (also: --int, --edit)
 
 Release:
-  -e, --release [status]  Show release branch health and next recommended action
-  -g, --merge         Preview or apply a merge into the release branch
-  -T, --tag           Preview or create release tags from version bumps
+  -e, --release [status]  Show release branch health and next recommended action (also: --rel, --rl)
+  -g, --merge         Preview or apply a merge into the release branch (also: --mrg, --mg)
+  -T, --tag           Preview or create release tags from version bumps (also: --tg)
 
 Repo:
-  -L, --log           Print Git log entries for the current repository
-  -u, --status        Print Git working tree status for the current repository
-  -V, --pipeline      Detect the current repository stack and create GitHub/GitLab/CircleCI/Bitbucket CI files
+  -L, --log           Print Git log entries for the current repository (also: --lg)
+  -u, --status        Print Git working tree status for the current repository (also: --stat, -st)
+  -V, --pipeline      Detect the current repository stack and create GitHub/GitLab/CircleCI/Bitbucket CI files (also: --pipe, --ci)
 
 Quick Actions:
   config          Persist provider, model, and API key settings
@@ -348,29 +370,29 @@ Quick Actions:
   git             Pass through to native git commands
 
 Output:
-  -w, --provider <name>
-  -O, --model <name>
+  -w, -W, --provider <name>
+  -O, --mod, --mo, --model <name>
   -j, --json
-  -M, --markdown
+  -M, --md, --markdown
   -H, --html
-  -q, --quiet
-  -v, --verbose
-  -y, --clipboard
-  -z, --stream
-  -n, --no-cache
-  -D, --diff <file>
-  -X, --max-diff-lines <n>
+  -q, --silent, --quiet
+  -v, --verb, --vv, --verbose
+  -y, --clip, --copy, --clipboard
+  -z, --str, --stream
+  -n, --noc, --fresh, --no-cache
+  -D, --dif, --diff <file>
+  -X, --max, --limit, --max-diff-lines <n>
 
 Comparison:
-  -B, --branch [base-ref]   Analyze the current branch against a base branch
-  -P, --pr [base-ref]       Alias for --branch, useful for PR-style comparisons
+  -B, --br, --branch [base-ref]   Analyze the current branch against a base branch
+  -P, --pull-request, --pr [base-ref]       Alias for --branch, useful for PR-style comparisons
 
 Config:
   Project config: .gitxplainrc or .gitxplainrc.json
   User config: ~/.gitxplain/config.json (macOS/Linux) or %USERPROFILE%\\.gitxplain\\config.json (Windows)
 
 Notes:
-  Run gitxplain inside a Git repository.
+  Run gitxplain inside a Git repository (or use gx as a short alias).
   If no command or mode is supplied, gitxplain prints this help text.
   Use --provider or --model to override your config or environment for one command.
   Use gitxplain git <args...> to run any native Git subcommand with its normal flags.
@@ -550,7 +572,7 @@ export function parseArgs(argv, options = {}) {
   const knownGitSubcommands = options.gitSubcommands ?? listGitSubcommands();
   const flags = new Set(args.filter((arg) => arg.startsWith("--")));
   const valueFlags = new Set(["--provider", "--model", "--max-diff-lines", "--branch", "--pr", "--blame", "--stash", "--diff",
-    "-w", "--prov", "-O", "--mod", "-X", "--max", "-B", "--br", "-P", "-b", "--bla", "-Z", "--sta", "-D", "--dif"]);
+    "-w", "--prov", "-W", "-O", "--mod", "--mo", "-X", "--max", "--limit", "-B", "--br", "-P", "-b", "--bla", "-Z", "--sta", "-D", "--dif"]);
   const positional = [];
 
   for (let index = 0; index < args.length; index += 1) {

@@ -54,6 +54,13 @@ Install from npm:
 npm install -g gitxplain
 ```
 
+After installation, you can use either `gitxplain` or the short alias `gx`:
+
+```bash
+gitxplain HEAD -s
+gx HEAD -s
+```
+
 Install from bun:
 
 ```bash
@@ -136,35 +143,35 @@ All commands support both long-form flags (e.g., `--summary`) and short aliases 
 - `-K` / `--mutation` - Mutation testing targets
 
 ### Workflow Commands
-- `-k` / `--commit` - Plan commits for changes
-- `-g` / `--merge` - Release merge
-- `-T` / `--tag` - Release tagging
-- `-e` / `--release` - Release status
-- `-E` / `--execute` - Execute plan
-- `-d` / `--dry-run` - Preview without executing
-- `-I` / `--interactive` - Interactive review
+- `-k` / `--commit` - Plan commits for changes (also: `--com`, `--plan`)
+- `-g` / `--merge` - Release merge (also: `--mrg`, `--mg`)
+- `-T` / `--tag` - Release tagging (also: `--tg`)
+- `-e` / `--release` - Release status (also: `--rel`, `--rl`)
+- `-E` / `--execute` - Execute plan (also: `--exe`, `--run`)
+- `-d` / `--dry-run` - Preview without executing (also: `--dry`, `--prev`)
+- `-I` / `--interactive` - Interactive review (also: `--int`, `--edit`)
 
 ### Output Options
 - `-j` / `--json` - JSON output
-- `-M` / `--markdown` - Markdown output
+- `-M` / `--markdown` - Markdown output (also: `--md`)
 - `-H` / `--html` - HTML output
-- `-q` / `--quiet` - Quiet mode
-- `-v` / `--verbose` - Verbose mode
-- `-y` / `--clipboard` - Copy to clipboard
-- `-z` / `--stream` - Stream output
-- `-n` / `--no-cache` - Bypass cache
+- `-q` / `--quiet` - Quiet mode (also: `--silent`)
+- `-v` / `--verbose` - Verbose mode (also: `--verb`, `--vv`)
+- `-y` / `--clipboard` - Copy to clipboard (also: `--clip`, `--copy`)
+- `-z` / `--stream` - Stream output (also: `--str`)
+- `-n` / `--no-cache` - Bypass cache (also: `--noc`, `--fresh`)
 - `-o` / `--cost` - Show cost
 
 ### Repository & Comparison
-- `-L` / `--log` - Repository log
-- `-u` / `--status` - Repository status
-- `-V` / `--pipeline` - CI/CD pipeline generation
-- `-B` / `--branch` - Branch comparison
-- `-P` / `--pr` - PR-style comparison
-- `-D` / `--diff` - File-specific diff
-- `-w` / `--provider` - AI provider
-- `-O` / `--model` - AI model
-- `-X` / `--max-diff-lines` - Diff line limit
+- `-L` / `--log` - Repository log (also: `--lg`)
+- `-u` / `--status` - Repository status (also: `--stat`, `--st`)
+- `-V` / `--pipeline` - CI/CD pipeline generation (also: `--pipe`, `--ci`)
+- `-B` / `--branch` - Branch comparison (also: `--br`)
+- `-P` / `--pr` - PR-style comparison (also: `--pull-request`)
+- `-D` / `--diff` - File-specific diff (also: `--dif`)
+- `-w` / `--provider` - AI provider (also: `--prov`, `-W`)
+- `-O` / `--model` - AI model (also: `--mod`, `--mo`)
+- `-X` / `--max-diff-lines` - Diff line limit (also: `--max`, `--limit`)
 
 ## Usage
 
@@ -690,48 +697,84 @@ Using short aliases can significantly speed up your workflow:
 ```bash
 # Quick summary of last commit
 gitxplain HEAD -s
+gx HEAD -s
 
 # Full analysis with JSON output
 gitxplain HEAD~1 -F -j
+gx HEAD~1 -F -j
 
 # Security review of current branch vs main
 gitxplain -B main -S
+gx -B main -S
 
 # Plan commits for current changes
 gitxplain -k
+gx -k
+gx --plan
 
 # Show repository status
 gitxplain -u
+gx -u
+gx --st
 
 # Generate PR description for branch
 gitxplain -B main -p -M
+gx -B main -p -M
 
 # Split last commit interactively
 gitxplain HEAD -x -I -E
+gx HEAD -x -I -E
+
+# Execute a commit plan
+gitxplain -k --run
+gx -k --run
+gx --plan --exe
 
 # Check release status
 gitxplain -e status
+gx -e status
+gx --rel status
 
 # Review with cost tracking
 gitxplain HEAD~1 -r -o
+gx HEAD~1 -r -o
 
 # Performance analysis of recent changes
 gitxplain HEAD~1 -A
+gx HEAD~1 -A
+gx HEAD~1 --perf
 
 # Database schema change review
 gitxplain HEAD -Q
+gx HEAD -Q
+gx HEAD --db
 
 # Check documentation coverage
 gitxplain HEAD -G
+gx HEAD -G
 
 # Generate API docs for new endpoints
 gitxplain HEAD -Y -M
+gx HEAD -Y -M
 
 # Analyze test coverage impact
 gitxplain HEAD~1 -J
+gx HEAD~1 -J
+gx HEAD~1 --cov
 
 # Suggest mutation testing targets
 gitxplain HEAD -K
+gx HEAD -K
+
+# Preview before executing
+gitxplain HEAD -x --prev
+gx HEAD -x --prev
+gx HEAD -x --dry-run
+
+# Use alternative short aliases
+gx HEAD -s -v --copy     # summary with verbose output and clipboard
+gx HEAD -F -j --silent    # full JSON output without extra noise
+gx HEAD -r --md --fresh   # markdown review bypassing cache
 ```
 
 ## Output Modes
@@ -898,14 +941,12 @@ Preview the release tags for the current branch:
 
 ```bash
 gitxplain --tag
-gitxplore --tag
 ```
 
 Actually create the tags:
 
 ```bash
 gitxplain --tag --execute
-gitxplore --tag --execute
 ```
 
 This command scans the full history of your current branch, detects version bumps from version-file diffs, and maps each untagged detected version to the last commit in that version window. It works independently from the `merge` workflow and does not require a `release` branch. By default it creates annotated tags named exactly after the detected version, such as `1.2.3`.
