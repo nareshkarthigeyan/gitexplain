@@ -23,7 +23,13 @@ const PROMPT_FILES = {
   "pr-description": "pr-description.txt",
   blame: "blame.txt",
   stash: "stash.txt",
-  conflict: "conflict.txt"
+  conflict: "conflict.txt",
+  performance: "performance.txt",
+  database: "database.txt",
+  docs: "docs.txt",
+  "api-docs": "api-docs.txt",
+  coverage: "coverage.txt",
+  mutation: "mutation.txt"
 };
 
 function fillTemplate(template, values) {
