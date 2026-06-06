@@ -5,7 +5,8 @@
   "type": "module",
   "bin": {
     "gitxplain": "cli/index.js",
-    "gitxplore": "cli/index.js"
+    "gitxplore": "cli/index.js",
+    "gx": "cli/index.js"
   },
   "scripts": {
     "start": "node ./cli/index.js",
@@ -18,5 +19,8 @@
     "ai",
     "developer-tools"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "gitxplain": "^0.2.2"
+  }
 }
