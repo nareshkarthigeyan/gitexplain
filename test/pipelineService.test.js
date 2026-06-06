@@ -228,7 +228,7 @@ test("writePipelineFiles creates packaging-aware release workflow for node CLI r
           license: "MIT",
           bin: {
             gitxplain: "./cli/index.js",
-            gitxplore: "./cli/index.js"
+            gx: "./cli/index.js"
           },
           scripts: {
             test: "node --test"
