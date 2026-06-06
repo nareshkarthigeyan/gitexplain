@@ -1,0 +1,53 @@
+Analyze this commit with focus on database changes.
+
+Commit Message:
+{{commit_message}}
+
+Files Changed:
+{{files_changed}}
+
+Stats:
+{{stats}}
+
+Diff:
+{{diff}}
+
+Focus on:
+- Database schema changes (tables, columns, indexes, constraints)
+- Migration scripts and their safety
+- SQL query changes and optimization opportunities
+- Data access layer modifications (ORM, query builders)
+- Transaction handling and isolation levels
+- Data consistency and integrity implications
+- Database-specific performance considerations
+
+Return:
+
+1. Schema Changes:
+- New tables, columns, or indexes
+- Removed or modified schema elements
+- Potential breaking changes to existing data
+
+2. Migration Analysis:
+- Are migrations reversible?
+- Data loss risks
+- Migration performance considerations for large datasets
+- Backwards compatibility concerns
+
+3. Query Optimization:
+- Inefficient queries introduced
+- Missing indexes that should be added
+- N+1 query problems
+- Opportunities for query batching or caching
+
+4. Data Integrity:
+- Foreign key constraints
+- Unique constraints
+- Data validation at the database level
+- Potential for orphaned records or inconsistent data
+
+5. Recommendations:
+- Indexing suggestions
+- Query optimization improvements
+- Migration safety improvements
+- Data validation enhancements
