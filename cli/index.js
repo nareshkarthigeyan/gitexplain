@@ -76,6 +76,12 @@ import {
   reconcileSplitPlan,
   validateSplitExecutionTarget
 } from "./services/splitService.js";
+import {
+  semanticSearch,
+  patternSearch,
+  codePatternSearch,
+  authorActivityTimeline
+} from "./services/searchService.js";
 
 const MODE_FLAGS = new Map([
   ["--summary", "summary"],
@@ -212,6 +218,27 @@ const SHORT_ALIASES = new Map([
   ["-V", "--pipeline"],
   ["--pipe", "--pipeline"],
   ["--ci", "--pipeline"],
+  // Search
+  ["--src", "--search"],
+  ["-a", "--author"],
+  ["--from", "--since"],
+  ["-S", "--since"],
+  ["--to", "--until"],
+  ["-U", "--until"],
+  ["-L", "--limit"],
+  ["--pat", "--pattern"],
+  ["-T", "--file-type"],
+  ["--type", "--file-type"],
+  ["-G", "--granularity"],
+  // Search action shortcuts
+  ["--sm", "semantic"],
+  ["--sp", "pattern"],
+  ["--sc", "code"],
+  ["--sl", "timeline"],
+  ["-sm", "semantic"],
+  ["-sp", "pattern"],
+  ["-sc", "code"],
+  ["-sl", "timeline"],
   // Provider
   ["-w", "--provider"],
   ["--prov", "--provider"],
@@ -282,7 +309,9 @@ const RESERVED_SUBCOMMANDS = new Set([
   "bin",
   "pop",
   "pull",
-  "push"
+  "push",
+  "search",
+  "find"
 ]);
 
 const CLI_VERSION = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version;
@@ -315,6 +344,8 @@ Usage:
   gitxplain --log
   gitxplain --status
   gitxplain --pipeline
+  gitxplain search <semantic|pattern|code|timeline> "<query>" [options]
+  gitxplain find <semantic|pattern|code|timeline> "<query>" [options]
 
 Analysis:
   -s, --summary       Generate a one-line summary of a change
@@ -365,6 +396,7 @@ Quick Actions:
   pop             Pop a stash entry like "pop 2"
   pull            Run git pull, optionally with a remote and branch
   push            Run git push, optionally with a remote and branch
+  search/find     Search commits by semantic, pattern, code, or timeline
   install-hook    Install a post-commit, post-merge, or pre-push gitxplain hook
   cache           Manage gitxplain cache entries
   git             Pass through to native git commands
@@ -386,6 +418,17 @@ Output:
 Comparison:
   -B, --br, --branch [base-ref]   Analyze the current branch against a base branch
   -P, --pull-request, --pr [base-ref]       Alias for --branch, useful for PR-style comparisons
+
+Search:
+  --author <name>, -a       Filter results by author
+  --since <date>, --from, -S  Start date for search (YYYY-MM-DD)
+  --until <date>, --to, -U  End date for search (YYYY-MM-DD)
+  --limit <n>, -L           Maximum number of results (default: 50)
+  --pattern <pattern>, --pat File pattern to filter by
+  --file-type <ext>, --type, -T  File extension for code search (e.g., js, py)
+  --case-insensitive, -i    Case-insensitive pattern matching
+  --granularity <period>, -G  Timeline granularity: hourly, daily, weekly, monthly (default: daily)
+  Actions: semantic (sm), pattern (sp), code (sc), timeline (sl)
 
 Config:
   Project config: .gitxplainrc or .gitxplainrc.json
@@ -554,6 +597,185 @@ function handleCacheCommand(parsed) {
   throw new Error(`Unknown cache subcommand: ${parsed.cacheAction}`);
 }
 
+async function handleSearchCommand(parsed, cwd, config) {
+  const { searchAction, searchQuery, searchAuthor, searchSince, searchUntil, searchLimit, searchPattern, searchFileType, searchCaseInsensitive, searchGranularity, format } = parsed;
+
+  if (!searchQuery) {
+    throw new Error('Usage: gitxplain search <semantic|pattern|code|timeline> "<query>" [options]');
+  }
+
+  const options = {
+    limit: searchLimit ? parseInt(searchLimit) : 50,
+    author: searchAuthor,
+    since: searchSince,
+    until: searchUntil,
+    pattern: searchPattern,
+    fileType: searchFileType,
+    caseInsensitive: searchCaseInsensitive,
+    granularity: searchGranularity,
+    provider: config.provider,
+    model: config.model
+  };
+
+  let result;
+
+  // Map shortcuts to full action names
+  const actionMap = {
+    'semantic': 'semantic',
+    'sm': 'semantic',
+    'pattern': 'pattern',
+    'sp': 'pattern',
+    'code': 'code',
+    'sc': 'code',
+    'timeline': 'timeline',
+    'sl': 'timeline'
+  };
+
+  const normalizedAction = actionMap[searchAction] || searchAction;
+
+  switch (normalizedAction) {
+    case 'semantic':
+      result = await semanticSearch(searchQuery, cwd, options);
+      break;
+    case 'pattern':
+      result = await patternSearch(searchQuery, cwd, options);
+      break;
+    case 'code':
+      result = await codePatternSearch(searchQuery, cwd, options);
+      break;
+    case 'timeline':
+      if (!searchAuthor) {
+        throw new Error('Timeline search requires --author flag');
+      }
+      result = await authorActivityTimeline(searchAuthor, cwd, options);
+      break;
+    default:
+      throw new Error(`Unknown search action: ${searchAction}. Use: semantic (sm), pattern (sp), code (sc), or timeline (sl)`);
+  }
+
+  // Format output based on requested format
+  if (format === 'json') {
+    console.log(JSON.stringify(result, null, 2));
+  } else if (format === 'markdown') {
+    console.log(formatSearchResultMarkdown(result));
+  } else {
+    console.log(formatSearchResultText(result));
+  }
+
+  return 0;
+}
+
+function formatSearchResultText(result) {
+  if (result.error) {
+    return `Error: ${result.error}`;
+  }
+
+  if (result.timeline) {
+    // Timeline result
+    let output = `Author Activity Timeline: ${result.author}\n`;
+    if (result.stats) {
+      output += `Total Commits: ${result.stats.totalCommits}\n`;
+      output += `Date Range: ${result.stats.dateRange?.start} to ${result.stats.dateRange?.end}\n`;
+      output += `Average per ${result.granularity}: ${result.stats.averagePerPeriod}\n`;
+      output += `Most Active Period: ${result.stats.mostActivePeriod?.period} (${result.stats.mostActivePeriod?.count} commits)\n\n`;
+    }
+    output += `Timeline:\n`;
+    
+    // Add ASCII chart
+    const maxCommits = Math.max(...result.timeline.map(p => p.count));
+    result.timeline.forEach(period => {
+      const barLength = Math.round((period.count / maxCommits) * 20);
+      const bar = '█'.repeat(barLength) + '░'.repeat(20 - barLength);
+      output += `  ${period.period}: ${bar} ${period.count}\n`;
+    });
+    
+    return output;
+  }
+
+  // Search results
+  const { query, pattern, results, total, fallback } = result;
+  let output = `${fallback ? 'Fallback ' : ''}Search Results for: "${query || pattern}"\n`;
+  output += `Found ${total} result${total === 1 ? '' : 's'}\n\n`;
+
+  if (results.length === 0) {
+    return output + 'No matching commits found.';
+  }
+
+  results.forEach((commit, index) => {
+    output += `${index + 1}. ${commit.sha} - ${commit.message}\n`;
+    output += `   Author: ${commit.author} | Date: ${commit.date}\n`;
+    if (commit.diff) {
+      output += `   Diff: ${commit.diff.substring(0, 100)}...\n`;
+    }
+    if (commit.matchType) {
+      output += `   Match Type: ${commit.matchType}\n`;
+    }
+    if (commit.relevance) {
+      output += `   Relevance: ${commit.relevance}\n`;
+    }
+    output += '\n';
+  });
+
+  return output;
+}
+
+function formatSearchResultMarkdown(result) {
+  if (result.error) {
+    return `**Error:** ${result.error}`;
+  }
+
+  if (result.timeline) {
+    // Timeline result
+    let output = `## Author Activity Timeline: ${result.author}\n\n`;
+    if (result.stats) {
+      output += `- **Total Commits:** ${result.stats.totalCommits}\n`;
+      output += `- **Date Range:** ${result.stats.dateRange?.start} to ${result.stats.dateRange?.end}\n`;
+      output += `- **Average per ${result.granularity}:** ${result.stats.averagePerPeriod}\n`;
+      output += `- **Most Active Period:** ${result.stats.mostActivePeriod?.period} (${result.stats.mostActivePeriod?.count} commits)\n\n`;
+    }
+    output += `### Timeline\n\n`;
+    output += `| Period | Commits | Activity |\n`;
+    output += `|--------|---------|----------|\n`;
+    
+    const maxCommits = Math.max(...result.timeline.map(p => p.count));
+    result.timeline.forEach(period => {
+      const barLength = Math.round((period.count / maxCommits) * 20);
+      const bar = '█'.repeat(barLength);
+      output += `| ${period.period} | ${period.count} | ${bar} |\n`;
+    });
+    
+    return output;
+  }
+
+  // Search results
+  const { query, pattern, results, total, fallback } = result;
+  let output = `## ${fallback ? 'Fallback ' : ''}Search Results for: "${query || pattern}"\n\n`;
+  output += `**Found ${total} result${total === 1 ? '' : 's'}**\n\n`;
+
+  if (results.length === 0) {
+    return output + 'No matching commits found.';
+  }
+
+  results.forEach((commit, index) => {
+    output += `### ${index + 1}. ${commit.sha}\n\n`;
+    output += `**${commit.message}**\n\n`;
+    output += `- **Author:** ${commit.author}\n`;
+    output += `- **Date:** ${commit.date}\n`;
+    if (commit.diff) {
+      output += `- **Diff Preview:** \`${commit.diff.substring(0, 100)}...\`\n`;
+    }
+    if (commit.matchType) {
+      output += `- **Match Type:** ${commit.matchType}\n`;
+    }
+    if (commit.relevance) {
+      output += `- **Relevance Score:** ${commit.relevance}\n`;
+    }
+    output += '\n';
+  });
+
+  return output;
+}
+
 function isDirectNativeGitSubcommand(subcommand, knownGitSubcommands) {
   if (!subcommand || subcommand.startsWith("-")) {
     return false;
@@ -572,7 +794,9 @@ export function parseArgs(argv, options = {}) {
   const knownGitSubcommands = options.gitSubcommands ?? listGitSubcommands();
   const flags = new Set(args.filter((arg) => arg.startsWith("--")));
   const valueFlags = new Set(["--provider", "--model", "--max-diff-lines", "--branch", "--pr", "--blame", "--stash", "--diff",
-    "-w", "--prov", "-W", "-O", "--mod", "--mo", "-X", "--max", "--limit", "-B", "--br", "-P", "-b", "--bla", "-Z", "--sta", "-D", "--dif"]);
+    "-w", "--prov", "-W", "-O", "--mod", "--mo", "-X", "--max", "--limit", "-B", "--br", "-P", "-b", "--bla", "-Z", "--sta", "-D", "--dif",
+    "--author", "--since", "--until", "--pattern", "--file-type", "--granularity",
+    "-a", "--from", "-S", "--to", "-U", "-L", "--pat", "-T", "--type", "-G"]);
   const positional = [];
 
   for (let index = 0; index < args.length; index += 1) {
@@ -610,6 +834,7 @@ export function parseArgs(argv, options = {}) {
   const isPopCommand = subcommand === "pop";
   const isPullCommand = subcommand === "pull";
   const isPushCommand = subcommand === "push";
+  const isSearchCommand = subcommand === "search" || subcommand === "find";
   const isRemoveHardCommand = isRemoveCommand && positional[1] === "hard" && positional.length === 2;
   const isNativeGitCommand = isNativeGitWrapper || isDirectNativeGitSubcommand(subcommand, knownGitSubcommands);
 
@@ -636,6 +861,7 @@ export function parseArgs(argv, options = {}) {
     popCommand: isPopCommand,
     pullCommand: isPullCommand,
     pushCommand: isPushCommand,
+    searchCommand: isSearchCommand,
     removeHardCommand: isRemoveHardCommand,
     nativeGitArgs: isNativeGitWrapper ? args.slice(1) : isNativeGitCommand ? args : [],
     hookName: isInstallHook ? positional[1] ?? "post-commit" : null,
@@ -646,6 +872,16 @@ export function parseArgs(argv, options = {}) {
     pullBranch: isPullCommand ? positional[2] ?? null : null,
     pushRemote: isPushCommand ? positional[1] ?? null : null,
     pushBranch: isPushCommand ? positional[2] ?? null : null,
+    searchAction: isSearchCommand ? positional[1] ?? "semantic" : null,
+    searchQuery: isSearchCommand ? positional[2] ?? null : null,
+    searchAuthor: getFlagValue(args, "--author"),
+    searchSince: getFlagValue(args, "--since"),
+    searchUntil: getFlagValue(args, "--until"),
+    searchLimit: getFlagValue(args, "--limit") ?? null,
+    searchPattern: getFlagValue(args, "--pattern"),
+    searchFileType: getFlagValue(args, "--file-type"),
+    searchCaseInsensitive: flags.has("--case-insensitive") || flags.has("-i"),
+    searchGranularity: getFlagValue(args, "--granularity") ?? "daily",
     commitRef:
       isInstallHook ||
       isConfigCommand ||
@@ -660,6 +896,7 @@ export function parseArgs(argv, options = {}) {
       isPopCommand ||
       isPullCommand ||
       isPushCommand ||
+      isSearchCommand ||
       subcommand === "help"
         ? null
         : positional[0] ?? null,
@@ -925,6 +1162,10 @@ export async function main(argv = process.argv) {
 
   if (parsed.pipelineCommand) {
     return runPipelineCommand(cwd);
+  }
+
+  if (parsed.searchCommand) {
+    return handleSearchCommand(parsed, cwd, config);
   }
 
   if (
