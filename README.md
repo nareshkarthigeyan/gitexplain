@@ -218,6 +218,19 @@ List saved user config values.
 gitxplain config list
 ```
 
+Search commits using semantic or pattern-based queries.
+
+```bash
+gitxplain search semantic "fix authentication bug" --limit 10
+gitxplain find semantic "fix authentication bug" --limit 10
+gitxplain search pattern "chore" --author "John Doe"
+gitxplain find sp "chore" --author "John Doe"
+gitxplain search code "function" --file-type js --limit 5
+gitxplain find sc "function" --file-type js --limit 5
+gitxplain search timeline "activity" --author "John Doe" --granularity weekly
+gitxplain find sl "activity" --author "John Doe" --granularity weekly
+```
+
 Analyze a single commit.
 
 ```bash
@@ -510,6 +523,36 @@ Inspect the repo and create CI/CD workflow files.
 -V, --pipeline
 ```
 
+Search:
+
+Search commits by semantic meaning (finds commits related to concepts).
+
+```bash
+gitxplain search semantic "<query>" [options]
+gitxplain find sm "<query>" [options]
+```
+
+Search commits by message pattern (grep-style search).
+
+```bash
+gitxplain search pattern "<pattern>" [options]
+gitxplain find sp "<pattern>" [options]
+```
+
+Search commits by code changes (finds commits that introduced specific code patterns).
+
+```bash
+gitxplain search code "<pattern>" [options]
+gitxplain find sc "<pattern>" [options]
+```
+
+Show author activity timeline with visualization.
+
+```bash
+gitxplain search timeline "<label>" --author "<name>" [options]
+gitxplain find sl "<label>" --author "<name>" [options]
+```
+
 Quick Actions:
 
 Persist provider, model, and API key settings.
@@ -775,6 +818,31 @@ gx HEAD -x --dry-run
 gx HEAD -s -v --copy     # summary with verbose output and clipboard
 gx HEAD -F -j --silent    # full JSON output without extra noise
 gx HEAD -r --md --fresh   # markdown review bypassing cache
+
+# Search commits by semantic meaning
+gitxplain search semantic "authentication bug" --limit 10
+gx search semantic "performance issue" --author "John Doe"
+gx find sm "authentication bug" -L 10
+
+# Search commits by message pattern
+gitxplain search pattern "chore" --limit 5
+gx search pattern "fix" --author "Jane" --since 2026-01-01
+gx find sp "chore" -L 5
+
+# Search commits by code changes
+gitxplain search code "function" --file-type js --limit 3
+gx search code "import" --file-type py
+gx find sc "function" --file-type js -L 3
+
+# View author activity timeline
+gitxplain search timeline "activity" --author "John Doe" --granularity weekly
+gx search timeline "contributions" --author "Jane" --since 2026-04-01
+gx find sl "activity" --author "John Doe" -G weekly
+
+# Export search results in different formats
+gitxplain search pattern "test" --json > results.json
+gitxplain search timeline "activity" --author "John" --markdown > timeline.md
+gx find sp "test" -j > results.json
 ```
 
 ## Output Modes
