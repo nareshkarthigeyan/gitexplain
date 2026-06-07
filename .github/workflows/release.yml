@@ -109,7 +109,7 @@ jobs:
             depends_on "node"
 
             def install
-              libexec.install Dir["package/*"]
+              libexec.install Dir["*"]
               bin.install_symlink libexec/"cli/index.js" => "gitxplain"
               bin.install_symlink libexec/"cli/index.js" => "gx"
             end
