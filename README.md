@@ -1,6 +1,6 @@
-# gitxplain
+# gx
 
-`gitxplain` is a Node.js CLI that analyzes Git commits, commit ranges, and branch diffs to generate structured, human-readable explanations with AI.
+`gx` (formerly `gitxplain`) is a Python CLI that analyzes Git commits, commit ranges, and branch diffs to generate structured, human-readable explanations with AI.
 
 Supported providers:
 
@@ -38,56 +38,50 @@ Supported providers:
 - Supports clipboard copy, verbosity controls, and hook installation
 - Supports project-level and user-level config files
 - Returns plain text or JSON output
-- Uses native Node APIs only, so the MVP has no runtime dependencies
+- Uses standard Python libraries and requests, with no complex setup needed.
 
 ## Requirements
 
-- Node.js 18+
+- Python 3.8+
 - A Git repository in your current working directory
 - An API key for your chosen provider, or a local Ollama instance
 
 ## Installation
 
-Install from npm:
+Install from PyPI using pip:
 
 ```bash
-npm install -g gitxplain
+pip install gx
 ```
 
-After installation, you can use either `gitxplain` or the short alias `gx`:
+After installation, you can use either `gx` or the alias `gitxplain`:
 
 ```bash
-gitxplain HEAD -s
 gx HEAD -s
-```
-
-Install from bun:
-
-```bash
-bun install -g gitxplain
+gitxplain HEAD -s
 ```
 
 Install with Homebrew:
 
 ```bash
 brew tap guruswarupa/homebrew-tap
-brew install gitxplain
+brew install gx
 ```
 
 Install from the AUR:
 
 ```bash
-yay -S gitxplain
+yay -S gx
 ```
 
 ```bash
-paru -S gitxplain
+paru -S gx
 ```
 
 Install from a Debian package downloaded from GitHub Releases:
 
 ```bash
-sudo apt install ./gitxplain_<version>_all.deb
+sudo apt install ./gx_<version>_all.deb
 ```
 
 Optional advanced environment variables:
@@ -697,13 +691,11 @@ Limit diff size before sending it to the model.
 
 ## Running The CLI
 
-To use the actual `gitxplain` command directly:
+To use the actual `gitxplain` command directly during development, install it in editable mode:
 
 ```bash
-npm link
+pip install -e .
 ```
-
-Run that from the repository root. `npm link` works on Windows, macOS, and Linux, though it may require elevated privileges depending on your Node/npm install prefix.
 
 Then from any Git repository:
 
@@ -718,19 +710,19 @@ gitxplain --branch main --pr-description
 gitxplain HEAD~10..HEAD --changelog
 gitxplain HEAD --refactor
 gitxplain HEAD --test-suggest
-gitxplain --blame cli/index.js
+gitxplain --blame gitxplain/cli.py
 gitxplain --conflict
 gitxplain --stash
-gitxplain HEAD~5..HEAD --lines --diff cli/index.js
+gitxplain HEAD~5..HEAD --lines --diff gitxplain/cli.py
 gitxplain --cost
 gitxplain HEAD --split --interactive --execute
 gitxplain install-hook post-merge
 ```
 
-If you do not want to link it globally, you can still run it locally:
+If you do not want to install it globally, you can still run it locally:
 
 ```bash
-node ./cli/index.js HEAD~1 --full
+python3 -m gitxplain.cli HEAD~1 --full
 ```
 
 ## Quick Examples with Short Aliases
@@ -1174,15 +1166,14 @@ Saved user settings live in `~/.gitxplain/config.json` on macOS/Linux, or `%USER
 
 ## Development
 
-```bash
-npm run lint
-npm test
-```
-
-To make the command globally available during local development:
+To run the unit tests:
 
 ```bash
-npm link
+python3 -m unittest discover -s tests -p "*.py"
 ```
 
-Run this from the repository root. On some systems, you may need an elevated shell depending on where npm installs global links.
+To install local development dependencies:
+
+```bash
+pip install -r requirements.txt
+```

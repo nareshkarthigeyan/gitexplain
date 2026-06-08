@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gx"
+version = "0.2.4"
+description = "AI-powered Git commit explainer CLI"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+dependencies = [
+    "requests>=2.25.0"
+]
+
+[project.scripts]
+gx = "gx.cli:main"
+gitxplain = "gx.cli:main"
+
+[tool.setuptools]
+packages = ["gx", "gx.services", "gx.prompts"]
+
+[tool.setuptools.package-data]
+"gx.prompts" = ["*.txt"]

@@ -1,19 +1,20 @@
 class Gitxplain < Formula
+  include Language::Python::Virtualenv
+
   desc "AI-powered Git commit explainer CLI"
   homepage "https://github.com/guruswarupa/gitxplain"
-  url "https://registry.npmjs.org/gitxplain/-/gitxplain-0.2.4.tgz"
-  sha256 "0aeff43689e6f706e4171bd6e47440c6f40752090285e9c2bfd9ae6f5603b11c"
+  url "https://files.pythonhosted.org/packages/source/g/gx/gx-0.2.4.tar.gz"
+  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
   license "MIT"
 
-  depends_on "node"
+  depends_on "python@3.12"
 
   def install
-    libexec.install Dir["*"]
-    bin.install_symlink libexec/"cli/index.js" => "gitxplain"
-    bin.install_symlink libexec/"cli/index.js" => "gx"
+    virtualenv_install_with_resources
   end
 
   test do
-    assert_match "gitxplain", shell_output("#{bin}/gitxplain --help")
+    assert_match "gx", shell_output("#{bin}/gx --help")
+    assert_match "gx", shell_output("#{bin}/gitxplain --help")
   end
 end

@@ -1,22 +1,23 @@
-pkgname=gitxplain
-pkgver=0.1.9
+pkgname=gx
+pkgver=0.2.4
 pkgrel=1
 pkgdesc="AI-powered Git commit explainer CLI"
 arch=('any')
 url="https://github.com/guruswarupa/gitxplain"
 license=('MIT')
-depends=('nodejs')
-source=("https://registry.npmjs.org/${pkgname}/-/${pkgname}-${pkgver}.tgz")
-sha256sums=('<SHA256_PLACEHOLDER>')
+depends=('python' 'python-requests')
+conflicts=('gitxplain')
+provides=('gitxplain')
+makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel')
+source=("https://files.pythonhosted.org/packages/source/${pkgname:0:1}/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('0000000000000000000000000000000000000000000000000000000000000000')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
 
 package() {
-  install -d "${pkgdir}/usr/lib/${pkgname}"
-  tar -xzf "${srcdir}/${pkgname}-${pkgver}.tgz" -C "${srcdir}"
-  cp -a "${srcdir}/package/." "${pkgdir}/usr/lib/${pkgname}/"
-
-  chmod 755 "${pkgdir}/usr/lib/${pkgname}/cli/index.js"
-
-  install -d "${pkgdir}/usr/bin"
-  ln -sf "/usr/lib/${pkgname}/cli/index.js" "${pkgdir}/usr/bin/gitxplain"
-  ln -sf "/usr/lib/${pkgname}/cli/index.js" "${pkgdir}/usr/bin/gx"
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }

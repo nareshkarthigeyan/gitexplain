@@ -3,10 +3,18 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PACKAGE_JSON="${ROOT_DIR}/package.json"
-VERSION="$(node -p "JSON.parse(require('node:fs').readFileSync(process.argv[1], 'utf8')).version" "${PACKAGE_JSON}")"
-DESCRIPTION="$(node -p "JSON.parse(require('node:fs').readFileSync(process.argv[1], 'utf8')).description" "${PACKAGE_JSON}")"
-PACKAGE_NAME="gitxplain"
+METADATA="$(python3 -c "
+import re
+with open('${ROOT_DIR}/pyproject.toml') as f:
+    content = f.read()
+version = re.search(r'version\s*=\s*\"([^\"]+)\"', content).group(1)
+desc = re.search(r'description\s*=\s*\"([^\"]+)\"', content).group(1)
+print(version)
+print(desc)
+")"
+VERSION="$(echo "${METADATA}" | head -n1)"
+DESCRIPTION="$(echo "${METADATA}" | tail -n+2)"
+PACKAGE_NAME="gx"
 ARCHITECTURE="${DEB_ARCHITECTURE:-all}"
 MAINTAINER="${DEB_MAINTAINER:-Guruswarupa <opensource@local.invalid>}"
 OUTPUT_DIR="${ROOT_DIR}/dist"
@@ -26,17 +34,20 @@ trap cleanup EXIT
 mkdir -p "${OUTPUT_DIR}" "${INSTALL_ROOT}" "${CONTROL_DIR}" "${DOC_DIR}" "${PACKAGE_ROOT}/usr/bin"
 
 cp -a \
-  "${ROOT_DIR}/cli" \
-  "${ROOT_DIR}/prompts" \
-  "${ROOT_DIR}/package.json" \
+  "${ROOT_DIR}/gx" \
   "${ROOT_DIR}/README.md" \
   "${INSTALL_ROOT}/"
 
+cat > "${PACKAGE_ROOT}/usr/bin/gx" <<EOF
+#!/bin/sh
+PYTHONPATH="/usr/lib/${PACKAGE_NAME}" exec python3 -m gx.cli "\$@"
+EOF
+chmod 755 "${PACKAGE_ROOT}/usr/bin/gx"
+ln -s "gx" "${PACKAGE_ROOT}/usr/bin/gitxplain"
+
 find "${PACKAGE_ROOT}" -type d -exec chmod 755 {} +
 find "${PACKAGE_ROOT}" -type f -exec chmod 644 {} +
-chmod 755 "${INSTALL_ROOT}/cli/index.js"
-ln -s "../lib/${PACKAGE_NAME}/cli/index.js" "${PACKAGE_ROOT}/usr/bin/gitxplain"
-ln -s "../lib/${PACKAGE_NAME}/cli/index.js" "${PACKAGE_ROOT}/usr/bin/gx"
+chmod 755 "${PACKAGE_ROOT}/usr/bin/gx"
 
 cat > "${CONTROL_DIR}/control" <<EOF
 Package: ${PACKAGE_NAME}
@@ -45,7 +56,7 @@ Section: utils
 Priority: optional
 Architecture: ${ARCHITECTURE}
 Maintainer: ${MAINTAINER}
-Depends: nodejs (>= 18)
+Depends: python3 (>= 3.8), python3-requests
 Homepage: https://github.com/guruswarupa/gitxplain
 Description: ${DESCRIPTION}
  AI-powered Git commit explainer CLI distributed as a Debian package.
